@@ -1,0 +1,21 @@
+<p style="color: green"><%= notice %></p>
+
+<h1>Photos</h1>
+
+<div id="photos">
+  <% @photos.each do |photo| %>
+    <div style="margin-bottom: 20px;">
+      <%= render photo %>
+
+      <% if photo.image.attached? %>
+        <%= image_tag photo.image.variant(resize_to_limit: [500, 500]) %>
+      <% end %>
+
+      <p>
+        <%= link_to "Show this photo", photo %>
+      </p>
+    </div>
+  <% end %>
+</div>
+
+<%= link_to "New photo", new_photo_path %>
