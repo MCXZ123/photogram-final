@@ -1,0 +1,23 @@
+<h1><%= @user.username %>'s Profile</h1>
+
+<% if current_user != @user %>
+  <% if current_user.sent_follow_requests.exists?(recipient: @user) %>
+    <p>Follow request already sent.</p>
+  <% else %>
+    <%= form_with model: FollowRequest.new, local: true do |form| %>
+      <%= form.hidden_field :recipient_id, value: @user.id %>
+      <%= form.submit "Send Follow Request" %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if current_user == @user && @user.private? %>
+  <h2>Pending Requests</h2>
+  <% @user.received_follow_requests.where(status: "pending").each do |request| %>
+    <p>
+      <%= request.sender.username %>
+      <%= button_to "Accept", accept_follow_request_path(request), method: :post %>
+      <%= button_to "Reject", reject_follow_request_path(request), method: :post %>
+    </p>
+  <% end %>
+<% end %>
