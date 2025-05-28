@@ -1,25 +1,18 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: %i[ show edit update destroy ]
 
-  # GET /photos or /photos.json
   def index
     @photos = Photo.all
   end
 
-  # GET /photos/1 or /photos/1.json
-  def show
-  end
+  def show; end
 
-  # GET /photos/new
   def new
     @photo = Photo.new
   end
 
-  # GET /photos/1/edit
-  def edit
-  end
+  def edit; end
 
-  # POST /photos or /photos.json
   def create
     @photo = Photo.new(photo_params)
     @photo.owner = current_user
@@ -35,7 +28,6 @@ class PhotosController < ApplicationController
     end
   end
 
-  # PATCH/PUT /photos/1 or /photos/1.json
   def update
     respond_to do |format|
       if @photo.update(photo_params)
@@ -48,7 +40,6 @@ class PhotosController < ApplicationController
     end
   end
 
-  # DELETE /photos/1 or /photos/1.json
   def destroy
     @photo.destroy!
 
@@ -58,14 +49,24 @@ class PhotosController < ApplicationController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_photo
-      @photo = Photo.find(params[:id])
-    end
+  def feed
+    following_ids = current_user.sent_follow_requests.where(status: "accepted").pluck(:recipient_id)
+    @feed_photos = Photo.where(owner_id: following_ids).order(created_at: :desc)
+  end
 
-    # Only allow a list of trusted parameters through.
-   def photo_params
-  params.require(:photo).permit(:caption, :image)
-end
+  def discover
+    following_ids = current_user.sent_follow_requests.where(status: "accepted").pluck(:recipient_id)
+    liked_photo_ids = Like.where(fan_id: following_ids).pluck(:photo_id).uniq
+    @discover_photos = Photo.where(id: liked_photo_ids).order(created_at: :desc)
+  end
+
+  private
+
+  def set_photo
+    @photo = Photo.find(params[:id])
+  end
+
+  def photo_params
+    params.require(:photo).permit(:caption, :image)
+  end
 end

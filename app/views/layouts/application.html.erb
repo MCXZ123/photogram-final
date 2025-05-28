@@ -8,4 +8,11 @@
   <body>
     <%= yield %>
   </body>
+
+  
 </html>
+<nav>
+  <%= link_to "Feed", feed_path %> |
+  <%= link_to "Discovery", discover_path %> |
+  <%= link_to "All Photos", photos_path %>
+</nav>

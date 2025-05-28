@@ -18,4 +18,7 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "photos#index"
+
+  get "/feed", to: "photos#feed", as: :feed
+  get "/discover", to: "photos#discover", as: :discover
 end
