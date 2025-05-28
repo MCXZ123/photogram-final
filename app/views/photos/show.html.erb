@@ -9,3 +9,23 @@
   <%= button_to "Destroy this photo", @photo, method: :delete %>
 </div>
 
+<h2>Comments</h2>
+
+<% @photo.comments.each do |comment| %>
+  <p>
+    <strong><%= comment.author.username %>:</strong>
+    <%= comment.body %>
+  </p>
+<% end %>
+
+<h3>New Comment</h3>
+<%= form_with model: Comment.new, local: true do |form| %>
+  <%= form.hidden_field :photo_id, value: @photo.id %>
+
+  <div>
+    <%= form.label :body %><br>
+    <%= form.text_area :body %>
+  </div>
+
+  <%= form.submit "Post comment" %>
+<% end %>
