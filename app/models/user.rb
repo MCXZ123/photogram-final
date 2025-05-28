@@ -27,4 +27,5 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
          has_many :comments, dependent: :destroy
+         has_many :likes, foreign_key: "fan_id", dependent: :destroy
 end

@@ -29,3 +29,10 @@
 
   <%= form.submit "Post comment" %>
 <% end %>
+
+<%= form_with model: Like.new, local: true do |form| %>
+  <%= form.hidden_field :photo_id, value: @photo.id %>
+  <%= form.submit "❤️ Like" %>
+<% end %>
+
+<p><strong>Total Likes:</strong> <%= @photo.likes.count %></p>
