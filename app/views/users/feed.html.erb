@@ -1,0 +1,16 @@
+<h1>Your Feed</h1>
+
+<% following_ids = @user.sent_follow_requests.where(status: "accepted").pluck(:recipient_id) %>
+<% @feed_photos = Photo.where(owner_id: following_ids).order(created_at: :desc) %>
+
+<% if @feed_photos.present? %>
+  <% @feed_photos.each do |photo| %>
+    <div style="margin-bottom: 20px;">
+      <%= image_tag(photo.image.url) if photo.image.present? %>
+      <p><%= photo.caption %></p>
+      <p><%= link_to "View photo", photo_path(photo) %></p>
+    </div>
+  <% end %>
+<% else %>
+  <p>Your feed is empty. Follow some users to see their posts!</p>
+<% end %>

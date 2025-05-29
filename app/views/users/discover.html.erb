@@ -1,0 +1,13 @@
+<h1>Discover Photos</h1>
+
+<% if @discover_photos.present? %>
+  <% @discover_photos.each do |photo| %>
+    <div style="margin-bottom: 20px;">
+      <%= image_tag(photo.image.url) if photo.image.present? %>
+      <p><%= photo.caption %></p>
+      <p><%= link_to "View photo", photo_path(photo) %></p>
+    </div>
+  <% end %>
+<% else %>
+  <p>No photos found.</p>
+<% end %>

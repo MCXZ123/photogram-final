@@ -13,35 +13,32 @@
 
   <tbody>
     <% @users.each do |user| %>
-      <tr>
-        <td><%= link_to user.username, user_path(user) %></td>
-        <td><%= user.private? ? "Yes" : "No" %></td>
+     <tr>
+  <td><%= link_to user.username, user_profile_path(user.username) %></td>
+  <td><%= user.private? ? "Yes" : "No" %></td>
 
-        <% if user_signed_in? && current_user != user %>
-          <td>
-            <% request = current_user.sent_follow_requests.find_by(recipient: user) %>
+  <% if user_signed_in? && current_user != user %>
+    <td>
+      <% request = current_user.sent_follow_requests.find_by(recipient: user) %>
 
-            <% if request.nil? %>
-              <!-- Follow button test looks for a <button> with text Follow -->
-              <%= form_with model: FollowRequest.new, local: true do |form| %>
-                <%= form.hidden_field :recipient_id, value: user.id %>
-                <%= form.submit "Follow" %>
-              <% end %>
-
-            <% elsif request.status == "pending" %>
-              Request sent |
-              <%= link_to "Cancel", follow_request_path(request), method: :delete %>
-
-            <% elsif request.status == "accepted" %>
-              <!-- Unfollow test looks for an <a> tag with text Unfollow -->
-              <%= link_to "Unfollow", follow_request_path(request), method: :delete %>
-            <% end %>
-
-          </td>
-        <% elsif user_signed_in? && current_user == user %>
-          <td>It's you!</td>
+      <% if request.nil? %>
+        <%= form_with model: FollowRequest.new, local: true do |form| %>
+          <%= form.hidden_field :recipient_id, value: user.id %>
+          <%= form.submit "Follow" %>
         <% end %>
-      </tr>
+
+      <% elsif request.status == "pending" %>
+        Request sent |
+        <%= link_to "Cancel", follow_request_path(request), method: :delete %>
+
+      <% elsif request.status == "accepted" %>
+        <%= link_to "Unfollow", follow_request_path(request), method: :delete %>
+      <% end %>
+    </td>
+  <% elsif user_signed_in? && current_user == user %>
+    <td>It's you!</td>
+  <% end %>
+</tr>
     <% end %>
   </tbody>
 </table>
