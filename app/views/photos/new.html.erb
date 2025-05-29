@@ -1,9 +1,13 @@
-<h1>New photo</h1>
+<%= form_with model: @photo, local: true, html: { multipart: true } do |form| %>
+  <div>
+    <%= form.label :caption %><br>
+    <%= form.text_field :caption %>
+  </div>
 
-<%= render "form", photo: @photo %>
+  <div>
+    <%= form.label :image %><br>
+    <%= form.file_field :image %>
+  </div>
 
-<br>
-
-<div>
-  <%= link_to "Back to photos", photos_path %>
-</div>
+  <%= form.submit "Add Photo" %>
+<% end %>

@@ -26,7 +26,7 @@ class LikesController < ApplicationController
 
     respond_to do |format|
       if @like.save
-        format.html { redirect_to like_url(@like), notice: "Like was successfully created." }
+        format.html { redirect_to photo_path(@like.photo), notice: "You liked this photo." }
         format.json { render :show, status: :created, location: @like }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -49,14 +49,15 @@ class LikesController < ApplicationController
   end
 
   # DELETE /likes/1 or /likes/1.json
-  def destroy
-    @like.destroy!
+def destroy
+  photo = @like.photo  # ✅ store this before destroying
+  @like.destroy!
 
-    respond_to do |format|
-      format.html { redirect_to likes_url, notice: "Like was successfully destroyed." }
-      format.json { head :no_content }
-    end
+  respond_to do |format|
+    format.html { redirect_to photo_path(photo), alert: "Like deleted successfully" }
+    format.json { head :no_content }
   end
+end
 
   private
     # Use callbacks to share common setup or constraints between actions.

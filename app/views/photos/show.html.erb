@@ -1,4 +1,12 @@
-<p style="color: green"><%= notice %></p>
+<% if notice %>
+  <p style="color: green;"><%= notice %></p>
+<% end %>
+
+<% if alert %>
+  <p style="color: red;"><%= alert %></p>
+<% end %>
+
+<h1>Photo Details</h1>
 
 <%= render @photo %>
 
@@ -6,7 +14,7 @@
   <%= link_to "Edit this photo", edit_photo_path(@photo) %> |
   <%= link_to "Back to photos", photos_path %>
 
-  <%= button_to "Destroy this photo", @photo, method: :delete %>
+  <%= button_to "Destroy this photo", @photo, method: :delete, data: { confirm: "Are you sure?" } %>
 </div>
 
 <h2>Comments</h2>
@@ -19,6 +27,7 @@
 <% end %>
 
 <h3>New Comment</h3>
+
 <%= form_with model: Comment.new, local: true do |form| %>
   <%= form.hidden_field :photo_id, value: @photo.id %>
 
@@ -30,9 +39,16 @@
   <%= form.submit "Post comment" %>
 <% end %>
 
-<%= form_with model: Like.new, local: true do |form| %>
-  <%= form.hidden_field :photo_id, value: @photo.id %>
-  <%= form.submit "❤️ Like" %>
+<h3>Likes</h3>
+
+<% if current_user.likes.exists?(photo_id: @photo.id) %>
+  <% like = current_user.likes.find_by(photo_id: @photo.id) %>
+  <%= link_to "Unlike", like_path(like), method: :delete, data: { turbo_method: :delete } %>
+<% else %>
+  <%= form_with model: Like.new, local: true do |form| %>
+    <%= form.hidden_field :photo_id, value: @photo.id %>
+    <%= form.submit "Like" %>
+  <% end %>
 <% end %>
 
 <p><strong>Total Likes:</strong> <%= @photo.likes.count %></p>
