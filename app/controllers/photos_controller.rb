@@ -17,14 +17,13 @@ class PhotosController < ApplicationController
     @photo = Photo.new(photo_params)
     @photo.owner = current_user
 
-    respond_to do |format|
-      if @photo.save
-        format.html { redirect_to photo_url(@photo), notice: "Photo created successfully." }
-        format.json { render :show, status: :created, location: @photo }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @photo.errors, status: :unprocessable_entity }
-      end
+    # Assign uploaded file if using a custom :image string column
+    @photo.image = params[:photo][:image] if params[:photo][:image].present?
+
+    if @photo.save
+      redirect_to photo_path(@photo), notice: "Photo created successfully"
+    else
+      render :new, status: :unprocessable_entity
     end
   end
 
